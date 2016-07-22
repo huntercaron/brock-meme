@@ -70,10 +70,13 @@
             padding: 12px;
             background: black;
             border-radius: 50%;
-
+            -webkit-transition: transform 1s;
+            -o-transition: transform 1s;
+            transition: transform 1s;
         }
 
         button img:hover {
+            transform: rotate(360deg);
             background-color: #333;
         }
 
@@ -85,6 +88,8 @@
             position: fixed;
             width: 140px;
             height: 140px;
+            -webkit-animation: 4s linear 0s infinite alternate rotate;
+            -moz-animation: 4s linear 0s infinite alternate rotate;
             animation: 4s linear 0s infinite alternate rotate;
             background-image: url("http://huntercaron.com/brock-meme/img/brockHead.png");
             background-size: contain;
@@ -112,6 +117,8 @@
         }
 
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); }  }
+        @-webkit-keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); }  }
+        @-moz-keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); }  }
     </style>
 </head>
 
