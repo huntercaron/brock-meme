@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Dock Bronaldson</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <style>
+        body {
+            background-image: url("../img/brocktheinternet.jpg");
+            background-size: cover;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        }
+
+        #container {
+            display: flex;
+        }
+
+        .inputs {
+            padding-top: 10%;
+            padding-left: 45px;
+        }
+
+        input {
+            background: none;
+            font-size: 24px;
+            outline: none;
+            border: none;
+            border-bottom: 2px solid white;
+            font-family: monospace;
+            display: block;
+            margin-top: 20px;
+            padding-bottom: 4px;
+            margin-bottom: -2px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
+        }
+
+        span {
+            color: white;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 0.4px;
+            font-size: 9px;
+
+        }
+
+        button {
+            margin-top: 60px;
+            display: block;
+            outline: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background: none;
+        }
+
+        button img {
+            padding: 12px;
+            background: black;
+            border-radius: 50%;
+
+        }
+
+        button img:hover {
+            background-color: #333;
+        }
+
+        #brock {
+            display: none;
+        }
+
+        .brockHeads {
+            position: fixed;
+            width: 140px;
+            height: 140px;
+            animation: 4s linear 0s infinite alternate rotate;
+            background-image: url("../img/brockHead.png");
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .topLeft {
+            top: 10px;
+            left: 10px;
+        }
+
+        .topRight {
+            top: 10px;
+            right: 10px;
+        }
+
+        .bottomLeft {
+            bottom: 10px;
+            left: 10px;
+        }
+
+        .bottomRight {
+            bottom: 10px;
+            right: 10px;
+        }
+
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); }  }
+    </style>
+</head>
+
+<body>
+    <script>
+    </script>
+
+    <div class="brockHeads topLeft"></div>
+    <div class="brockHeads topRight"></div>
+    <div class="brockHeads bottomLeft "></div>
+    <div class="brockHeads bottomRight"></div>
+    <div id="container">
+        <img id="brock" src="img/template.jpg" />
+
+        <canvas width="500" height="500"></canvas>
+        <div class="inputs">
+
+            <input id="topLineText" type="text">
+            <span>top meme</span>
+
+
+
+            <input id="bottomLineText" type="text">
+            <span>bottom meme</span>
+
+
+            <button id="saveBtn">
+                <img src="img/d.svg"/>
+            </button>
+        </div>
+    </div>
+    <script>
+        var image = document.getElementById("brock");
+
+        function textChangeListener(evt) {
+            var id = evt.target.id;
+            var text = evt.target.value;
+
+            if (id == "topLineText") {
+                window.topLineText = text;
+            } else {
+                window.bottomLineText = text;
+            }
+
+            redrawMeme(image, window.topLineText, window.bottomLineText);
+        }
+
+        function clearCanvas(ctx, canvas) {
+            console.log("clearing canvas");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function redrawMeme(image, topLine, bottomLine) {
+
+            // Get Canvas2DContext
+            var canvas = document.querySelector('canvas');
+            var ctx = canvas.getContext("2d");
+            clearCanvas(ctx, canvas);
+
+            if (image != null)
+                ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+            // Text attributes
+            ctx.font = '34pt Impact';
+            ctx.textAlign = 'center';
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 3;
+            ctx.fillStyle = 'white';
+
+            if (topLine != null) {
+                ctx.fillText(topLine, canvas.width / 2, 60);
+                ctx.strokeText(topLine, canvas.width / 2, 60);
+            }
+
+            if (bottomLine != null) {
+                ctx.fillText(bottomLine, canvas.width / 2, canvas.height - 20);
+                ctx.strokeText(bottomLine, canvas.width / 2, canvas.height - 20);
+            }
+        }
+
+        function saveFile() {
+            window.open(document.querySelector('canvas').toDataURL());
+        }
+
+
+
+        function handleFileSelect(evt) {
+            var canvasWidth = 500;
+            var canvasHeight = 500;
+            var file = evt.target.files[0];
+
+
+
+            var reader = new FileReader();
+            reader.onload = function(fileObject) {
+                var data = fileObject.target.result;
+
+                // Create an image object
+                var image = new Image();
+                image.onload = function() {
+
+                    window.imageSrc = this;
+                    redrawMeme(window.imageSrc, null, null);
+                }
+
+                // Set image data to background image.
+                image.src = data;
+                console.log(fileObject.target.result);
+            };
+            reader.readAsDataURL(file)
+        }
+
+        window.topLineText = "";
+        window.bottomLineText = "";
+
+        var input1 = document.getElementById('topLineText');
+        var input2 = document.getElementById('bottomLineText');
+
+        input1.oninput = textChangeListener;
+        input2.oninput = textChangeListener;
+
+        document.querySelector('button').addEventListener('click', saveFile, false);
+        image.onload = function() {
+            redrawMeme(image, null, null);
+        }
+    </script>
+
+</body>
+
+</html>
