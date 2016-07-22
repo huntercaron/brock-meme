@@ -153,8 +153,10 @@
         </div>
     </div>
     <script>
+        //grab image from html element
         var image = document.getElementById("brock");
 
+        //watches for changes to text
         function textChangeListener(evt) {
             var id = evt.target.id;
             var text = evt.target.value;
@@ -165,11 +167,12 @@
                 window.bottomLineText = text;
             }
 
+            //send to meme drawing station
             redrawMeme(image, window.topLineText, window.bottomLineText);
         }
 
+        // clears the canvas every frame
         function clearCanvas(ctx, canvas) {
-            console.log("clearing canvas");
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
 
@@ -178,6 +181,8 @@
             // Get Canvas2DContext
             var canvas = document.querySelector('canvas');
             var ctx = canvas.getContext("2d");
+
+            //clear last frame
             clearCanvas(ctx, canvas);
 
             if (image != null)
@@ -201,50 +206,28 @@
             }
         }
 
+        // take the base64 encoded png and open in new tab
         function saveFile() {
             window.open(document.querySelector('canvas').toDataURL());
         }
 
-
-
-        function handleFileSelect(evt) {
-            var canvasWidth = 500;
-            var canvasHeight = 500;
-            var file = evt.target.files[0];
-
-
-
-            var reader = new FileReader();
-            reader.onload = function(fileObject) {
-                var data = fileObject.target.result;
-
-                // Create an image object
-                var image = new Image();
-                image.onload = function() {
-
-                    window.imageSrc = this;
-                    redrawMeme(window.imageSrc, null, null);
-                }
-
-                // Set image data to background image.
-                image.src = data;
-                console.log(fileObject.target.result);
-            };
-            reader.readAsDataURL(file)
-        }
-
+        //intial text
         window.topLineText = "";
         window.bottomLineText = "";
 
+        //declaring dom variables
         var input1 = document.getElementById('topLineText');
         var input2 = document.getElementById('bottomLineText');
 
+        //when input, send to the listener function
         input1.oninput = textChangeListener;
         input2.oninput = textChangeListener;
 
+        //click listener for the button
         document.querySelector('button').addEventListener('click', saveFile, false);
+
         image.onload = function() {
-            redrawMeme(image, null, null);
+            redrawMeme(image, window.topLineText, window.bottomLineText);
         }
     </script>
 
